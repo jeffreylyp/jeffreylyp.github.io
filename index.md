@@ -6,8 +6,8 @@ layout: home
         <ul class="artical-list">
         {% for post in site.posts %}
             <li>
-                <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
-                <div class="title-desc">{{ post.description }}</div>
+                <h3><span>{{ post.date | date_to_string }}</span>>> <a href="{{ post.url }}">{{ post.title }}</a></h3>
+                <!--<div class="title-desc">{{ post.description }}</div>-->
             </li>
         {% endfor %}
         </ul>
