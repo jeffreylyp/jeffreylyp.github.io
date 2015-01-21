@@ -33,7 +33,7 @@ description: 讲述幂等的必要性和常用的实现方式
 业务系统实现幂等的通用方式：一般是排重表校验，在业务操作所在的库建一张小表，名称暂时搞成dup_forbidden，核心字段就一个biz_id，并且在这个字段上建立一个unique index，其他字段可以根据业务需求来扩充。那么原来的业务f实现幂等的伪代码如下：
 
     begin transaction;
-    
+
     count = insert ignore dup_forbidden (...biz_id...) value(...biz_id...)
     if (count > 0) {
       f(biz_id)
@@ -51,17 +51,20 @@ description: 讲述幂等的必要性和常用的实现方式
     if (count > 0) {
       f(xx_id)
     }
+
     commit;
 
 从这个例子可以看出deal_tab订单表本身已经可以作为dup_forbidden表的作用了，所以insert防重操作变成update来实现，当然这个是乐观锁的版本。悲观锁的版本如下：
 
     begin transaction;
+
     deal = select * from deal_tab where id = xx_id for update
     if (deal.status == paid) {
       return true;
     } else if (deal.status = unpaid) {
       f(xx_id)
     }
+
     commit;
     
 
